@@ -1,12 +1,12 @@
 variable "aks_cluster" {
   type = object({
     name                = string
-    location            = string
-    resource_group_name = string
-    dns_prefix          = string
-    node_count          = number
-    node_size           = string
-    kubernetes_version  = string
+    location            = optional(string)
+    resource_group_name = optional(string)
+    dns_prefix          = optional(string)
+    node_count          = optional(number)
+    node_size           = optional(string)
+    kubernetes_version  = optional(string)
     service_mesh        = optional(string, null)
     loadBalancerIp      = optional(string, null)
   })
