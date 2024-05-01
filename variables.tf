@@ -13,11 +13,11 @@ variable "aks_cluster" {
   default = {
     name                = "default-aks"
     location            = "East US"
-    resource_group_name = "default-resource-group"
+    resource_group_name = "example-resources"
     dns_prefix          = "defaultaksdns"
     node_count          = 1
-    node_size           = "Standard_DS2_v2"
-    kubernetes_version  = "1.18.14"
+    node_size           = "standard_b2pls_v2"
+    kubernetes_version  = "1.28.5"
   }
 }
 
@@ -36,5 +36,5 @@ variable "sp_client_secret" {
 variable "tenant_id" {
   description = "The Azure Tenant ID that owns the service principal."
   type        = string
-  sensitive = t
+  sensitive = true
 }

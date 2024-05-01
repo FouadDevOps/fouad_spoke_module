@@ -11,10 +11,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size    = var.aks_cluster.node_size
   }
 
-   service_principal {
-    client_id     = var.sp_client_id
-    client_secret = var.sp_client_secret
+  identity {
+    type = "SystemAssigned"
   }
+
+  tags = {
+    Environment = "Production"
+  }
+
 
 }
 
