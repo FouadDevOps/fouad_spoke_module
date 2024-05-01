@@ -36,5 +36,5 @@ variable "sp_client_secret" {
 variable "tenant_id" {
   description = "The Azure Tenant ID that owns the service principal."
   type        = string
-  sensitive = true
+  sensitive = t
 }
