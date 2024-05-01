@@ -1,24 +1,16 @@
 variable "aks_cluster" {
   type = object({
-    name                = string
-    location            = optional(string)
-    resource_group_name = optional(string)
-    dns_prefix          = optional(string)
-    node_count          = optional(number)
-    node_size           = optional(string)
-    kubernetes_version  = optional(string)
-    service_mesh        = optional(string, null)
-    loadBalancerIp      = optional(string, null)
+    name                = string  // Name must be provided by the user of the module
+    location            = optional(string, "East US")
+    resource_group_name = optional(string, "example-resources")
+    dns_prefix          = optional(string, "defaultaksdns")
+    node_count          = optional(number, 1)  // Default updated based on your first post
+    node_size           = optional(string, "standard_b2pls_v2")  // Default updated based on your first post
+    kubernetes_version  = optional(string, "1.28.5")  // Default updated based on your first post
+    service_mesh        = optional(string, null)  // Optional, no default service mesh enabled
+    loadBalancerIp      = optional(string, null)  // Optional, no default IP
   })
-  default = {
-    name                = "default-aks"
-    location            = "East US"
-    resource_group_name = "example-resources"
-    dns_prefix          = "defaultaksdns"
-    node_count          = 1
-    node_size           = "standard_b2pls_v2"
-    kubernetes_version  = "1.28.5"
-  }
+  description = "Configuration for the AKS cluster, allowing optional overrides for most properties"
 }
 
 variable "sp_client_id" {

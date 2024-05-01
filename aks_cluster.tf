@@ -1,15 +1,14 @@
-# aks_cluster.tf in spoke_module
-
+# AKS Cluster Resource
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_cluster.name
-  location            = coalesce(var.aks_cluster.location, "East US")
-  resource_group_name = coalesce(var.aks_cluster.resource_group_name, "example-resources")
-  dns_prefix          = coalesce(var.aks_cluster.dns_prefix, "defaultaksdns")
+  location            = var.aks_cluster.location
+  resource_group_name = var.aks_cluster.resource_group_name
+  dns_prefix          = var.aks_cluster.dns_prefix
 
   default_node_pool {
     name       = "default"
-    node_count = coalesce(var.aks_cluster.node_count, 3)
-    vm_size    = coalesce(var.aks_cluster.node_size, "standard_b2pls_v2")
+    node_count = var.aks_cluster.node_count
+    vm_size    = var.aks_cluster.node_size
   }
 
   identity {
@@ -19,8 +18,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   tags = {
     Environment = "Production"
   }
-}
 
+
+
+}
 
 # Null Resource for Service Mesh Configuration
 resource "null_resource" "service_mesh" {
