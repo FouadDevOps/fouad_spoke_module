@@ -28,7 +28,7 @@ resource "null_resource" "service_mesh" {
   count = (var.aks_cluster.service_mesh != null && var.aks_cluster.service_mesh == "istio") || (var.aks_cluster.loadBalancerIp != null) ? 1 : 0
 
   triggers = {
-    cluster_name = azurerm_kubernetes_cluster.aks.name
+    cluster_name = azurerm_kubernetes_cluster.aks_cluster.name
     service_mesh = var.aks_cluster.service_mesh != null ? var.aks_cluster.service_mesh : ""
     loadBalancerIp = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
   }
@@ -61,7 +61,7 @@ resource "null_resource" "loadBalancerIp" {
   count = (var.aks_cluster.service_mesh != null && var.aks_cluster.service_mesh == "istio") || (var.aks_cluster.loadBalancerIp != null) ? 1 : 0
 
   triggers = {
-    cluster_name = azurerm_kubernetes_cluster.aks.name
+    cluster_name = azurerm_kubernetes_cluster.aks_cluster.name
     loadBalancerIp = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
     service_mesh = var.aks_cluster.service_mesh != null ? var.aks_cluster.service_mesh : ""
   }
