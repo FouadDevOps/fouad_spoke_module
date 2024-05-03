@@ -35,7 +35,7 @@ resource "null_resource" "service_mesh" {
     working_dir = "${path.module}/scripts"
     command     = "./service_mesh_cluster_yaml_input.sh add $CLUSTER_NAME $SERVICE_MESH $LOAD_BALANCER_IP"
     environment = {
-      CLUSTER_NAME     = self.triggers.cluster_name
+      CLUSTER_NAME     = self.triggers.name
       SERVICE_MESH     = self.triggers.service_mesh
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
     }
@@ -46,7 +46,7 @@ resource "null_resource" "service_mesh" {
     working_dir = "${path.module}/scripts"
     command     = "./service_mesh_cluster_yaml_input.sh rm $CLUSTER_NAME $SERVICE_MESH $LOAD_BALANCER_IP"
     environment = {
-      CLUSTER_NAME     = self.triggers.cluster_name
+      CLUSTER_NAME     = self.triggers.name
       SERVICE_MESH     = self.triggers.service_mesh
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
     }
@@ -66,9 +66,9 @@ resource "null_resource" "loadBalancerIp" {
   provisioner "local-exec" {
     when        = create
     working_dir = "${path.module}/scripts"
-    command     = "./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME $LOAD_BALANCER_IP $SERVICE_MESH"
+    command     = "./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
     environment = {
-      CLUSTER_NAME     = self.triggers.cluster_name
+      CLUSTER_NAME     = self.triggers.name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
       SERVICE_MESH     = self.triggers.service_mesh
     }
@@ -77,9 +77,9 @@ resource "null_resource" "loadBalancerIp" {
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/scripts"
-    command     = "./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME $LOAD_BALANCER_IP $SERVICE_MESH"
+    command     = "./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
     environment = {
-      CLUSTER_NAME     = self.triggers.cluster_name
+      CLUSTER_NAME     = self.triggers.name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
       SERVICE_MESH     = self.triggers.service_mesh
     }
