@@ -12,7 +12,7 @@ variable "aks_cluster" {
 variable "location" {
   type        = string
   description = "Location of the AKS cluster"
-  default = "East US"
+  default     = "East US"
 }
 
 variable "resource_group_name" {
@@ -34,9 +34,6 @@ variable "node_count" {
 
 
 variable "client_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
-
-
-# Add more variables as necessary
