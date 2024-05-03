@@ -4,8 +4,8 @@ resource "azurerm_kubernetes_cluster" "example" {
   resource_group_name = azurerm_resource_group.aks_rg.name
 
   default_node_pool {
-    name       = "default"
-    node_count = 1
+    name       = var.node_count
+    node_count = var.node_pool_name
     vm_size    = "standard_b2pls_v2"
   }
 
