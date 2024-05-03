@@ -1,32 +1,42 @@
 variable "aks_cluster" {
   type = object({
-    name                = string  // Name must be provided by the user of the module
-    location            = optional(string, "East US")
-    resource_group_name = optional(string, "example-resources")
-    dns_prefix          = optional(string, "defaultaksdns")
-    node_count          = optional(number, 1)  // Default updated based on your first post
-    node_size           = optional(string, "standard_b2pls_v2")  // Default updated based on your first post
-    kubernetes_version  = optional(string, "1.28.5")  // Default updated based on your first post
-    service_mesh        = optional(string, null)  // Optional, no default service mesh enabled
-    loadBalancerIp      = optional(string, null)  // Optional, no default IP
+    name                = string
+    loadBalancerIp      = optional(string, "")
+    service_mesh        = optional(string, "")
+    auto_loadBalancerIp = optional(bool, false)
+    kubernetes_version  = optional(string)
   })
-  description = "Configuration for the AKS cluster, allowing optional overrides for most properties"
+  description = "Properties of the AKS cluster"
 }
 
-variable "sp_client_id" {
-  description = "The Client ID for the Service Principal."
+variable "location" {
   type        = string
-  sensitive   = true
+  description = "Location of the AKS cluster"
+  default = "East US"
 }
 
-variable "sp_client_secret" {
-  description = "The Client Secret for the Service Principal."
+variable "resource_group_name" {
   type        = string
-  sensitive   = true
+  description = "Name of the resource group"
 }
 
-variable "tenant_id" {
-  description = "The Azure Tenant ID that owns the service principal."
+variable "node_pool_name" {
   type        = string
+  default     = "default"
+  description = "Name of the AKS node pool"
+}
+
+variable "node_count" {
+  type        = number
+  default     = 1
+  description = "Number of nodes in the AKS cluster"
+}
+
+
+variable "client_secret" {
+  type = string
   sensitive = true
 }
+
+
+# Add more variables as necessary

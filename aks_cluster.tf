@@ -1,14 +1,12 @@
-# AKS Cluster Resource
-resource "azurerm_kubernetes_cluster" "aks_cluster" {
+resource "azurerm_kubernetes_cluster" "example" {
   name                = var.aks_cluster.name
-  location            = var.aks_cluster.location
-  resource_group_name = var.aks_cluster.resource_group_name
-  dns_prefix          = var.aks_cluster.dns_prefix
+  location            = azurerm_resource_group.aks_rg.location
+  resource_group_name = azurerm_resource_group.aks_rg.name
 
   default_node_pool {
     name       = "default"
-    node_count = var.aks_cluster.node_count
-    vm_size    = var.aks_cluster.node_size
+    node_count = 1
+    vm_size    = "standard_b2pls_v2"
   }
 
   identity {
@@ -18,10 +16,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   tags = {
     Environment = "Production"
   }
-
-
-
 }
+
 
 # Null Resource for Service Mesh Configuration
 resource "null_resource" "service_mesh" {
