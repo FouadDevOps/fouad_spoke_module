@@ -5,8 +5,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   dns_prefix = "fouad"
 
   default_node_pool {
-    name       = var.node_count
-    node_count = var.node_pool_name
+    name       = var.node_pool_name
+    node_count = var.node_count
     vm_size    = "standard_b2pls_v2"
   }
 
