@@ -7,6 +7,10 @@ variable "aks_cluster" {
     kubernetes_version  = optional(string)
   })
   description = "Properties of the AKS cluster"
+
+  default = {
+    name = "myaks_cluster"
+  }
 }
 
 variable "location" {
