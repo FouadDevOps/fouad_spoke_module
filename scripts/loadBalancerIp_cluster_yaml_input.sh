@@ -65,7 +65,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
   if [ $ACTION = "add" ]; then 
     echo "Add loadBalancerIp flag"
     cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
-    awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml > header_part.yaml
+    awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
     cp header_part.yaml updated.yaml
     cat $CLUSTER_NAME.yaml | yq '.values' | yq ".gateway.service.loadBalancerIp = env(LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
     cat updated.yaml > $CLUSTER_NAME.yaml
@@ -76,7 +76,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
   if [ $ACTION = "rm" ]; then 
     echo "Remove loadBalancerIp flag"
     cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
-    awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml > header_part.yaml
+    awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
     cp header_part.yaml updated.yaml
     cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.gateway)' | sed 's/^/  /' >> updated.yaml
     cat updated.yaml > $CLUSTER_NAME.yaml
