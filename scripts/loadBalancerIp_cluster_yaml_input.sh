@@ -67,7 +67,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
     cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
     awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml > header_part.yaml
     cp header_part.yaml updated.yaml
-    cat cluster.yaml | yq '.values' | yq ".gateway.service.loadBalancerIp = env(LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
+    cat $CLUSTER_NAME.yaml | yq '.values' | yq ".gateway.service.loadBalancerIp = env(LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
     cat updated.yaml > $CLUSTER_NAME.yaml
     
     echo "Result after adding loadBalancerIp flag:"
