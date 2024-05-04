@@ -28,6 +28,9 @@ resource "null_resource" "loadBalancerIp" {
   triggers = {
     cluster_name   = azurerm_kubernetes_cluster.aks_cluster.name
     loadBalancerIp = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
+    resource_group_name = "MC_aks_resource_group_myaks_cluster_eastus"
+    vnet_name           = "aks-vnet-17017758"
+    subnet_name         = "aks-subnet"
     # service_mesh   = var.aks_cluster.service_mesh != null ? var.aks_cluster.service_mesh : ""
   }
 
@@ -38,6 +41,9 @@ resource "null_resource" "loadBalancerIp" {
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
+      RESOURCE_GROUP   = self.triggers.resource_group_name
+      VNET_NAME        = self.triggers.vnet_name
+      SUBNET_NAME      = self.triggers.subnet_name
       # SERVICE_MESH     = self.triggers.service_mesh
     }
   }
@@ -49,6 +55,9 @@ resource "null_resource" "loadBalancerIp" {
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
+      RESOURCE_GROUP   = self.triggers.resource_group_name
+      VNET_NAME        = self.triggers.vnet_name
+      SUBNET_NAME      = self.triggers.subnet_name
       # SERVICE_MESH     = self.triggers.service_mesh
     }
   }
