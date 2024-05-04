@@ -86,7 +86,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
   fi 
 
   git config user.name "FouadDevOps"
-  git config user.email "git@github.com"
+  git config user.email "algahmif@aetna.com"
   git add $CLUSTER_NAME.yaml
   COMMIT_ACTION="add"
   if [ $ACTION = "rm" ]; then
