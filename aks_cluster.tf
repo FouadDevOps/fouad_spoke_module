@@ -36,7 +36,7 @@ resource "null_resource" "loadBalancerIp" {
     working_dir = "${path.module}/scripts"
     command     = "./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
     environment = {
-      CLUSTER_NAME     = self.triggers.name
+      CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
       # SERVICE_MESH     = self.triggers.service_mesh
     }
@@ -47,7 +47,7 @@ resource "null_resource" "loadBalancerIp" {
     working_dir = "${path.module}/scripts"
     command     = "./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
     environment = {
-      CLUSTER_NAME     = self.triggers.name
+      CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
       # SERVICE_MESH     = self.triggers.service_mesh
     }
