@@ -55,8 +55,8 @@ if pwd | grep -q managed-environment; then
 if ls | grep -q $CLUSTER_NAME.yaml; then
 
   BRANCH_NAME="loadBalancerIp/updated-in-$CLUSTER_NAME-$(date '+%s')"
-  git checkout master 
-  git pull origin master
+  git checkout main 
+  git pull origin main
   git checkout -b $BRANCH_NAME
   
   echo "Found $CLUSTER_NAME.yaml file to update."
