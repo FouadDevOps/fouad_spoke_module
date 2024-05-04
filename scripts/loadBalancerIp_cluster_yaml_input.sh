@@ -95,6 +95,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
   if git status | grep -q "Changes to be committed"; then
     echo "Committing and pushing changes..."
     git commit -m "$COMMIT_ACTION loadBalancerIp flag - $GITHUB_RUN_ID"
+    git pull origin $BRANCH_NAME
     git push -u origin $BRANCH_NAME
     gh pr create --fill
     gh pr merge $BRANCH_NAME --admin --squash
