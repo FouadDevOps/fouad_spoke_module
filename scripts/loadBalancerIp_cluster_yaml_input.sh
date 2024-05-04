@@ -54,7 +54,7 @@ if pwd | grep -q managed-environment; then
 
 if ls | grep -q $CLUSTER_NAME.yaml; then
 
-  BRANCH_NAME="loadBalancerIp/updated-in-$CLUSTER_NAME-$(date '+%s')"
+  BRANCH_NAME="loadBalancerIp-updated-in-$CLUSTER_NAME-$(date '+%s')"
   git checkout main 
   git pull origin main
   git checkout -b $BRANCH_NAME
@@ -95,7 +95,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
   if git status | grep -q "Changes to be committed"; then
     echo "Committing and pushing changes..."
     git commit -m "$COMMIT_ACTION loadBalancerIp flag - $GITHUB_RUN_ID"
-    git push -f origin $BRANCH_NAME
+    git push -u origin $BRANCH_NAME
     gh pr create --fill
     gh pr merge $BRANCH_NAME --admin --squash
   fi 
