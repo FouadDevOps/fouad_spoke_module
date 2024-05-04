@@ -3,6 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   location            = azurerm_resource_group.aks_rg.location
   resource_group_name = azurerm_resource_group.aks_rg.name
   dns_prefix = "fouad"
+  depends_on = [ azurerm_resource_group.aks_rg ]
 
   default_node_pool {
     name       = var.node_pool_name
