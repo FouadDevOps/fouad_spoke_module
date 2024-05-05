@@ -9,8 +9,8 @@ set -e
 
 ######################################
 
-if [ "$#" -ne 7 ]; then
-  echo "ERROR: Incorrect number of arguments, received $#, but 7 are required"
+if [ "$#" -ne 6 ]; then
+  echo "ERROR: Incorrect number of arguments, received $#, but 6 are required"
   echo "Usage:"
   echo "$0 ACTION CLUSTER_NAME LOAD_BALANCER_IP RESOURCE_GROUP VNET_NAME SUBNET_NAME"
   for param in "$@"
@@ -26,7 +26,6 @@ LOAD_BALANCER_IP=$3
 RESOURCE_GROUP=$4
 VNET_NAME=$5
 SUBNET_NAME=$6
-SERVICE_MESH=$7
 
 if [ -z $LOAD_BALANCER_IP ]; then
   echo "Get an IP from the subnet"
