@@ -60,7 +60,7 @@ resource "null_resource" "loadBalancerIp" {
       RESOURCE_GROUP   = self.triggers.resource_group_name
       VNET_NAME        = self.triggers.vnet_name
       SUBNET_NAME      = self.triggers.subnet_name
-      SERVICE_MESH     = self.triggers.service_mesh
+      # SERVICE_MESH     = self.triggers.service_mesh
     }
   }
 }
