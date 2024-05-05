@@ -2,8 +2,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                = var.aks_cluster.name
   location            = azurerm_resource_group.aks_rg.location
   resource_group_name = azurerm_resource_group.aks_rg.name
-  dns_prefix = "fouad"
-  depends_on = [ azurerm_resource_group.aks_rg ]
+  dns_prefix          = "fouad"
+  depends_on          = [azurerm_resource_group.aks_rg]
 
   default_node_pool {
     name       = var.node_pool_name
@@ -23,14 +23,16 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
 
 # Null Resource for Load Balancer IP Configuration
 resource "null_resource" "loadBalancerIp" {
-  count = var.aks_cluster.loadBalancerIp != null ? 1 : 0
+  count = var.aks_cluster.loadBalancerIp != null || var.aks_cluster.auto_loadBalancerIp == true || var.aks_cluster.service_mesh == "istio" ? 1 : 0
 
   triggers = {
-    cluster_name   = azurerm_kubernetes_cluster.aks_cluster.name
-    loadBalancerIp = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
+    cluster_name        = azurerm_kubernetes_cluster.aks_cluster.name
+    loadBalancerIp      = var.aks_cluster.loadBalancerIp
     resource_group_name = "MC_aks_resource_group_myaks_cluster_eastus"
     vnet_name           = "aks-vnet-17017758"
     subnet_name         = "aks-subnet"
+    service_mesh        = var.aks_cluster.service_mesh
+
     # service_mesh   = var.aks_cluster.service_mesh != null ? var.aks_cluster.service_mesh : ""
   }
 
@@ -44,7 +46,7 @@ resource "null_resource" "loadBalancerIp" {
       RESOURCE_GROUP   = self.triggers.resource_group_name
       VNET_NAME        = self.triggers.vnet_name
       SUBNET_NAME      = self.triggers.subnet_name
-      # SERVICE_MESH     = self.triggers.service_mesh
+      SERVICE_MESH     = self.triggers.service_mesh
     }
   }
 
@@ -58,41 +60,41 @@ resource "null_resource" "loadBalancerIp" {
       RESOURCE_GROUP   = self.triggers.resource_group_name
       VNET_NAME        = self.triggers.vnet_name
       SUBNET_NAME      = self.triggers.subnet_name
-      # SERVICE_MESH     = self.triggers.service_mesh
+      SERVICE_MESH     = self.triggers.service_mesh
     }
   }
 }
 
 
 # Null Resource for Service Mesh Configuration
-# resource "null_resource" "service_mesh" {
-#   count = (var.aks_cluster.service_mesh != null && var.aks_cluster.service_mesh == "istio") || (var.aks_cluster.loadBalancerIp != null) ? 1 : 0
+resource "null_resource" "service_mesh" {
+  count = (var.aks_cluster.service_mesh != null && var.aks_cluster.service_mesh == "istio") || (var.aks_cluster.loadBalancerIp != null) ? 1 : 0
 
-#   triggers = {
-#     cluster_name   = azurerm_kubernetes_cluster.aks_cluster.name
-#     service_mesh   = var.aks_cluster.service_mesh != null ? var.aks_cluster.service_mesh : ""
-#     loadBalancerIp = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
-#   }
+  triggers = {
+    cluster_name   = azurerm_kubernetes_cluster.aks_cluster.name
+    service_mesh   = var.aks_cluster.service_mesh != null ? var.aks_cluster.service_mesh : ""
+    loadBalancerIp = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
+  }
 
-#   provisioner "local-exec" {
-#     when        = create
-#     working_dir = "${path.module}/scripts"
-#     command     = "./service_mesh_cluster_yaml_input.sh add $CLUSTER_NAME $SERVICE_MESH $LOAD_BALANCER_IP"
-#     environment = {
-#       CLUSTER_NAME     = self.triggers.name
-#       SERVICE_MESH     = self.triggers.service_mesh
-#       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
-#     }
-#   }
+  provisioner "local-exec" {
+    when        = create
+    working_dir = "${path.module}/scripts"
+    command     = "./service_mesh_cluster_yaml_input.sh add $CLUSTER_NAME $SERVICE_MESH $LOAD_BALANCER_IP"
+    environment = {
+      CLUSTER_NAME     = self.triggers.name
+      SERVICE_MESH     = self.triggers.service_mesh
+      LOAD_BALANCER_IP = self.triggers.loadBalancerIp
+    }
+  }
 
-#   provisioner "local-exec" {
-#     when        = destroy
-#     working_dir = "${path.module}/scripts"
-#     command     = "./service_mesh_cluster_yaml_input.sh rm $CLUSTER_NAME $SERVICE_MESH $LOAD_BALANCER_IP"
-#     environment = {
-#       CLUSTER_NAME     = self.triggers.name
-#       SERVICE_MESH     = self.triggers.service_mesh
-#       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
-#     }
-#   }
-# }
+  provisioner "local-exec" {
+    when        = destroy
+    working_dir = "${path.module}/scripts"
+    command     = "./service_mesh_cluster_yaml_input.sh rm $CLUSTER_NAME $SERVICE_MESH $LOAD_BALANCER_IP"
+    environment = {
+      CLUSTER_NAME     = self.triggers.name
+      SERVICE_MESH     = self.triggers.service_mesh
+      LOAD_BALANCER_IP = self.triggers.loadBalancerIp
+    }
+  }
+}

@@ -22,7 +22,7 @@ variable "location" {
 variable "resource_group_name" {
   type        = string
   description = "Name of the resource group"
-  default = "aks_resource_group"
+  default     = "aks_resource_group"
 }
 
 variable "node_pool_name" {
