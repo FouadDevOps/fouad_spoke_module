@@ -31,7 +31,7 @@ resource "null_resource" "loadBalancerIp" {
     resource_group_name = "MC_aks_resource_group_myaks_cluster_eastus"
     vnet_name           = "aks-vnet-17017758"
     subnet_name         = "aks-subnet"
-    service_mesh        = var.aks_cluster.service_mesh != null ? var.aks_cluster.service_mesh : ""
+    service_mesh        = var.aks_cluster.service_mesh
   }
 
   provisioner "local-exec" {
