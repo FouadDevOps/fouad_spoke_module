@@ -2,7 +2,7 @@ variable "aks_cluster" {
   type = object({
     name                = string
     loadBalancerIp      = optional(string, "")
-    service_mesh        = optional(string, "")
+    service_mesh        = optional(string, "istio")
     auto_loadBalancerIp = optional(bool, false)
     kubernetes_version  = optional(string)
   })
