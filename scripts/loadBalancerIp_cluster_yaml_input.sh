@@ -46,23 +46,23 @@ echo "RESOURCE_GROUP: $RESOURCE_GROUP"
 echo "VNET_NAME: $VNET_NAME"
 echo "SUBNET_NAME: $SUBNET_NAME"
 
-# echo "Current working directory:"
-# pwd
-# cd ../../../../
-# echo "New working directory:"
-# pwd
-# echo "Checking for cluster yaml file..."
-# if pwd | grep -q managed-environment; then
-#   echo "In managed-environment repo"
+echo "Current working directory:"
+pwd
+cd ../../../../
+echo "New working directory:"
+pwd
+echo "Checking for cluster yaml file..."
+if pwd | grep -q managed-environment; then
+  echo "In managed-environment repo"
 
-#   if ls | grep -q "$CLUSTER_NAME.yaml"; then
-#     BRANCH_NAME="loadBalancerIp-updated-in-$CLUSTER_NAME-$(date '+%s')"
-#     git checkout main
-#     git pull origin main
-#     git checkout -b "$BRANCH_NAME"
+  if ls | grep -q "$CLUSTER_NAME.yaml"; then
+    BRANCH_NAME="loadBalancerIp-updated-in-$CLUSTER_NAME-$(date '+%s')"
+    git checkout main
+    git pull origin main
+    git checkout -b "$BRANCH_NAME"
     
-#     echo "Found $CLUSTER_NAME.yaml file to update."
-#     cat "$CLUSTER_NAME.yaml"
+    echo "Found $CLUSTER_NAME.yaml file to update."
+    cat "$CLUSTER_NAME.yaml"
 
     if [ "$ACTION" = "add" ]; then
       if [ "$SERVICE_MESH" = "istio" ]; then
@@ -105,19 +105,19 @@ echo "SUBNET_NAME: $SUBNET_NAME"
       cat "$CLUSTER_NAME.yaml"
     fi
 
-    # git config user.name "FouadDevOps"
-    # git config user.email "algahmif@aetna.com"
-    # git add "$CLUSTER_NAME.yaml"
-    # COMMIT_ACTION="add"
-    # if [ "$ACTION" = "rm" ]; then
-    #   COMMIT_ACTION="remove"
-    # fi
-    # if git status | grep -q "Changes to be committed"; then
-    #   echo "Committing and pushing changes..."
-    #   git commit -m "$COMMIT_ACTION loadBalancerIp flag - $GITHUB_RUN_ID"
-    #   git push -u origin "$BRANCH_NAME"
-    #   gh pr create --fill
-    #   gh pr merge "$BRANCH_NAME" --admin --squash
-    # fi
-  # fi
-# fi
+    git config user.name "FouadDevOps"
+    git config user.email "algahmif@aetna.com"
+    git add "$CLUSTER_NAME.yaml"
+    COMMIT_ACTION="add"
+    if [ "$ACTION" = "rm" ]; then
+      COMMIT_ACTION="remove"
+    fi
+    if git status | grep -q "Changes to be committed"; then
+      echo "Committing and pushing changes..."
+      git commit -m "$COMMIT_ACTION loadBalancerIp flag - $GITHUB_RUN_ID"
+      git push -u origin "$BRANCH_NAME"
+      gh pr create --fill
+      gh pr merge "$BRANCH_NAME" --admin --squash
+    fi
+  fi
+fi
