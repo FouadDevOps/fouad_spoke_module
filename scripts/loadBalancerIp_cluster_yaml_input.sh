@@ -9,10 +9,10 @@ set -e
 
 ######################################
 
-if [ "$#" -ne 6 ]; then
+if [ "$#" -ne 7 ]; then
   echo "ERROR: Incorrect number of arguments, received $#, but 6 are required"
   echo "Usage:"
-  echo "$0 ACTION CLUSTER_NAME LOAD_BALANCER_IP RESOURCE_GROUP VNET_NAME SUBNET_NAME"
+  echo "$0 ACTION CLUSTER_NAME LOAD_BALANCER_IP RESOURCE_GROUP VNET_NAME SUBNET_NAME SERVICE_MESH"
   for param in "$@"
   do
    echo "Received: " $param
@@ -26,6 +26,7 @@ LOAD_BALANCER_IP=$3
 RESOURCE_GROUP=$4
 VNET_NAME=$5
 SUBNET_NAME=$6
+SERVICE_MESH=$7
 
 if [ -z $LOAD_BALANCER_IP ]; then
   echo "Get an IP from the subnet"
@@ -62,24 +63,42 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
   echo "Found $CLUSTER_NAME.yaml file to update."
   cat $CLUSTER_NAME.yaml
 
-  if [ $ACTION = "add" ]; then 
-    echo "Add loadBalancerIp flag"
-    cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
-    awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
-    cp header_part.yaml updated.yaml
-    cat $CLUSTER_NAME.yaml | yq '.values' | yq ".gateway.service.loadBalancerIp = env(LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
-    cat updated.yaml > $CLUSTER_NAME.yaml
-    
+  if [ $ACTION = "add" ]; then
+    if [ "$SERVICE_MESH" = "istio" ]; then
+      echo "Add loadBalancerIp flag with gateway:"
+      cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
+      awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
+      cp header_part.yaml updated.yaml
+      cat $CLUSTER_NAME.yaml | yq '.values' | yq ".gateway.service.loadBalancerIp = env(LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
+      cat updated.yaml > $CLUSTER_NAME.yaml
+    else
+      echo "Add loadBalancerIp only flag "
+      cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
+      awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
+      cp header_part.yaml updated.yaml
+      cat $CLUSTER_NAME.yaml | yq '.values' | yq ".loadBalancerIp = env(LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
+      cat updated.yaml > $CLUSTER_NAME.yaml
+    fi
+
     echo "Result after adding loadBalancerIp flag:"
     cat $CLUSTER_NAME.yaml 
-  fi
-  if [ $ACTION = "rm" ]; then 
-    echo "Remove loadBalancerIp flag"
-    cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
-    awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
-    cp header_part.yaml updated.yaml
-    cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.gateway)' | sed 's/^/  /' >> updated.yaml
-    cat updated.yaml > $CLUSTER_NAME.yaml
+  
+
+  elif [ $ACTION = "rm" ]; then
+    if [ "$SERVICE_MESH" = "istio" ]; then
+      echo "Remove loadBalancerIp flag with gateway"
+      cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
+      awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
+      cp header_part.yaml updated.yaml
+      cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.gateway)' | sed 's/^/  /' >> updated.yaml
+      cat updated.yaml > $CLUSTER_NAME.yaml
+    else
+      echo "Remove loadBalancerIp flag"
+      cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
+      awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
+      cp header_part.yaml updated.yaml
+      cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.loadBalancerIp)' | sed 's/^/  /' >> updated.yaml
+      cat updated.yaml > $CLUSTER_NAME.yaml
 
     echo "Result after removing loadBalancerIp flag:"
     cat $CLUSTER_NAME.yaml 
