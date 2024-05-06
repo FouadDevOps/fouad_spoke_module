@@ -37,7 +37,7 @@ resource "null_resource" "loadBalancerIp" {
   provisioner "local-exec" {
     when        = create
     working_dir = "${path.module}/scripts"
-    command     = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
+    command     = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME $LOAD_BALANCER_IP $RESOURCE_GROUP $VNET_NAME $SUBNET_NAME $SERVICE_MESH"
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
@@ -51,7 +51,7 @@ resource "null_resource" "loadBalancerIp" {
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/scripts"
-    command     = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
+    command     = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME $LOAD_BALANCER_IP $RESOURCE_GROUP $VNET_NAME $SUBNET_NAME $SERVICE_MESH"
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
