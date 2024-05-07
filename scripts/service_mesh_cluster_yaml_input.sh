@@ -41,7 +41,6 @@ export LOAD_BALANCER_IP
 echo "Paremeters in use:"
 echo "ACTION: $ACTION"
 echo "CLUSTER_NAME: $CLUSTER_NAME"
-echo "SERVICE_MESH: $SERVICE_MESH"
 
 echo "current working directory:"
 pwd
