@@ -78,29 +78,26 @@ resource "null_resource" "service_mesh" {
   provisioner "local-exec" {
     when        = create
     working_dir = "${path.module}/scripts"
-    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh add $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\""
+    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh add $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
       RESOURCE_GROUP   = self.triggers.resource_group_name
       VNET_NAME        = self.triggers.vnet_name
       SUBNET_NAME      = self.triggers.subnet_name
-      SERVICE_MESH     = self.triggers.service_mesh
-
     }
   }
 
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/scripts"
-    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh rm $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\""
+    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh rm $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\""
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       LOAD_BALANCER_IP = self.triggers.loadBalancerIp
       RESOURCE_GROUP   = self.triggers.resource_group_name
       VNET_NAME        = self.triggers.vnet_name
       SUBNET_NAME      = self.triggers.subnet_name
-      SERVICE_MESH     = self.triggers.service_mesh
     }
   }
 }
