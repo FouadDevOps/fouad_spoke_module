@@ -27,11 +27,10 @@ resource "null_resource" "loadBalancerIp" {
 
   triggers = {
     cluster_name        = azurerm_kubernetes_cluster.aks_cluster.name
-    loadBalancerIp      = var.aks_cluster.loadBalancerIp
     resource_group_name = "MC_aks_resource_group_myaks_cluster_eastus"
     vnet_name           = "aks-vnet-17017758"
     subnet_name         = "aks-subnet"
-    loadBalancerIp = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
+    loadBalancerIp      = var.aks_cluster.loadBalancerIp != null ? var.aks_cluster.loadBalancerIp : ""
 
   }
 
