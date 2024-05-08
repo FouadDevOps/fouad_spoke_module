@@ -42,13 +42,12 @@ resource "null_resource" "loadBalancerIp" {
     command = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\" \"$AUTO_LOAD_BALANCER_IP\""
     environment = {
       CLUSTER_NAME                      = self.triggers.cluster_name
-      LOAD_BALANCER_IP                  = self.triggers.loadBalancerIp
+      AUTO_LOAD_BALANCER_IP             = self.triggers.auto_loadBalancerIp
       RESOURCE_GROUP                    = self.triggers.resource_group_name
       VNET_NAME                         = self.triggers.vnet_name
       SUBNET_NAME                       = self.triggers.subnet_name
       SERVICE_MESH                      = self.triggers.service_mesh
-      AUTO_LOAD_BALANCER_IP             = self.triggers.auto_loadBalancerIp
-    }
+     }
   }
 
   provisioner "local-exec" {
@@ -57,12 +56,11 @@ resource "null_resource" "loadBalancerIp" {
     command = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME \"$LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\" \"$AUTO_LOAD_BALANCER_IP\""
     environment = {
       CLUSTER_NAME                    = self.triggers.cluster_name
-      LOAD_BALANCER_IP                = self.triggers.loadBalancerIp
+      AUTO_LOAD_BALANCER_IP           = self.triggers.auto_loadBalancerIp
       RESOURCE_GROUP                  = self.triggers.resource_group_name
       VNET_NAME                       = self.triggers.vnet_name
       SUBNET_NAME                     = self.triggers.subnet_name
       SERVICE_MESH                    = self.triggers.service_mesh
-      AUTO_LOAD_BALANCER_IP           = self.triggers.auto_loadBalancerIp
     }
   }
 }
