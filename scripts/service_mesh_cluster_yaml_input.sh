@@ -12,8 +12,8 @@ set -e
 ## $6 = SUBNET_NAME    
 ######################################
 
-if [ "$#" -ne 6 ]; then
-  echo "ERROR: Incorrect number of arguments, received $#, but 6 are required"
+if [ "$#" -ne 3 ]; then
+  echo "ERROR: Incorrect number of arguments, received $#, but 3 are required"
   echo "Usage:"
   echo "$0 ACTION CLUSTER_NAME LOAD_BALANCER_IP SERVICE_MESH"
   for param in "$@"
@@ -25,18 +25,18 @@ fi
 
 ACTION=$1
 CLUSTER_NAME=$2
-LOAD_BALANCER_IP=$3
-RESOURCE_GROUP=$4
-VNET_NAME=$5
-SUBNET_NAME=$6
+# LOAD_BALANCER_IP=$3
+# RESOURCE_GROUP=$4
+# VNET_NAME=$5
+# SUBNET_NAME=$6
 
-if [ -z "$LOAD_BALANCER_IP" ]; then
-  echo "Get an IP from the subnet"
-  LOAD_BALANCER_IP=$(az network vnet subnet list-available-ips --resource-group $RESOURCE_GROUP --vnet-name $VNET_NAME --name $SUBNET_NAME --query [0])
-  echo "Assigned IP: $LOAD_BALANCER_IP"
-fi
+# if [ -z "$LOAD_BALANCER_IP" ]; then
+#   echo "Get an IP from the subnet"
+#   LOAD_BALANCER_IP=$(az network vnet subnet list-available-ips --resource-group $RESOURCE_GROUP --vnet-name $VNET_NAME --name $SUBNET_NAME --query [0])
+#   echo "Assigned IP: $LOAD_BALANCER_IP"
+# fi
 
-export LOAD_BALANCER_IP
+# export LOAD_BALANCER_IP
 
 echo "Paremeters in use:"
 echo "ACTION: $ACTION"
@@ -66,7 +66,8 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
     cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
     awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
     cp header_part.yaml updated.yaml
-    cat $CLUSTER_NAME.yaml | yq '.values' | yq '.istio_enabled = true | .certManager.enabled = true | .certManagerForISTIO.enabled = true | .istiod.enabled = true | .istioIngressGateway.enabled = true | .gateway.service.loadBalancerIp = env(LOAD_BALANCER_IP)' | sed 's/^/  /' >> updated.yaml
+    cat $CLUSTER_NAME.yaml | yq '.values' | yq '.istio_enabled = true | .certManager.enabled = true | .certManagerForISTIO.enabled = true | .istiod.enabled = true | .istioIngressGateway.enabled = true' | sed 's/^/  /' >> updated.yaml
+    #     cat $CLUSTER_NAME.yaml | yq '.values' | yq '.istio_enabled = true | .certManager.enabled = true | .certManagerForISTIO.enabled = true | .istiod.enabled = true | .istioIngressGateway.enabled = true | .gateway.service.loadBalancerIp = env(LOAD_BALANCER_IP)' | sed 's/^/  /' >> updated.yaml
     cat updated.yaml > $CLUSTER_NAME.yaml
     
     echo "Result after adding service_mesh flag:"
@@ -77,7 +78,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
     cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
     awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
     cp header_part.yaml updated.yaml
-    cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.istio_enabled) | del(.certManager) | del(.certManagerForISTIO) | del(.istiod) | del(.istio_enabled) | del(.istioIngressGateway) | del(.gateway) | (.loadBalancerIp)' | sed 's/^/  /' >> updated.yaml
+    cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.istio_enabled) | del(.certManager) | del(.certManagerForISTIO) | del(.istiod) | del(.istioIngressGateway) | del(.gateway) |' | sed 's/^/  /' >> updated.yaml
     cat updated.yaml > $CLUSTER_NAME.yaml
 
     echo "Result after removing service_mesh flag:"
