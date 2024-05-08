@@ -77,7 +77,7 @@ resource "null_resource" "service_mesh" {
   provisioner "local-exec" {
     when        = create
     working_dir = "${path.module}/scripts"
-    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh add $CLUSTER_NAME \"$LOAD_BALANCER_IP\""
+    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh add $CLUSTER_NAME"
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       # LOAD_BALANCER_IP = self.triggers.loadBalancerIp
@@ -87,7 +87,7 @@ resource "null_resource" "service_mesh" {
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/scripts"
-    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh rm $CLUSTER_NAME \"$LOAD_BALANCER_IP\""
+    command     = "chmod +x service_mesh_cluster_yaml_input.sh; ./service_mesh_cluster_yaml_input.sh rm $CLUSTER_NAME"
     environment = {
       CLUSTER_NAME     = self.triggers.cluster_name
       # LOAD_BALANCER_IP = self.triggers.loadBalancerIp

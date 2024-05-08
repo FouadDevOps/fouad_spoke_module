@@ -15,7 +15,7 @@ set -e
 if [ "$#" -ne 3 ]; then
   echo "ERROR: Incorrect number of arguments, received $#, but 3 are required"
   echo "Usage:"
-  echo "$0 ACTION CLUSTER_NAME LOAD_BALANCER_IP SERVICE_MESH"
+  echo "$0 ACTION CLUSTER_NAME"
   for param in "$@"
   do
    echo "Received: " $param
