@@ -78,7 +78,7 @@ if ls | grep -q $CLUSTER_NAME.yaml; then
     cat $CLUSTER_NAME.yaml | yq '.values' | sed 's/^/  /' > values_part.yaml
     awk '/values: \|/{print $0; exit} {print}' $CLUSTER_NAME.yaml values_part.yaml > header_part.yaml
     cp header_part.yaml updated.yaml
-    cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.istio_enabled) | del(.certManager) | del(.certManagerForISTIO) | del(.istiod) | del(.istioIngressGateway) | del(.gateway) |' | sed 's/^/  /' >> updated.yaml
+    cat $CLUSTER_NAME.yaml | yq '.values' | yq 'del(.istio_enabled) | del(.certManager) | del(.certManagerForISTIO) | del(.istiod) | del(.istioIngressGateway) | del(.gateway)' | sed 's/^/  /' >> updated.yaml
     cat updated.yaml > $CLUSTER_NAME.yaml
 
     echo "Result after removing service_mesh flag:"

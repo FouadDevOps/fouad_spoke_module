@@ -23,7 +23,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
 
 # Null Resource for Load Balancer IP Configuration
 resource "null_resource" "loadBalancerIp" {
-  count = var.aks_cluster.loadBalancerIp != null || var.aks_cluster.auto_loadBalancerIp == true || var.aks_cluster.service_mesh == "istio" ? 1 : 0
+  count = var.aks_cluster.loadBalancerIp != null || var.aks_cluster.auto_loadBalancerIp == "true" || var.aks_cluster.service_mesh == "istio" ? 1 : 0
 
   triggers = {
     cluster_name        = azurerm_kubernetes_cluster.aks_cluster.name
@@ -32,7 +32,7 @@ resource "null_resource" "loadBalancerIp" {
     subnet_name         = "aks-subnet"
     loadBalancerIp      = var.aks_cluster.loadBalancerIp
     service_mesh        = var.aks_cluster.service_mesh
-    auto_loadBalancerIp = tostring(var.aks_cluster.auto_loadBalancerIp)
+    auto_loadBalancerIp = var.aks_cluster.auto_loadBalancerIp
 
   }
 
