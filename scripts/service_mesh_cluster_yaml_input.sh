@@ -12,8 +12,8 @@ set -e
 ## $6 = SUBNET_NAME    
 ######################################
 
-if [ "$#" -ne 3 ]; then
-  echo "ERROR: Incorrect number of arguments, received $#, but 3 are required"
+if [ "$#" -ne 2 ]; then
+  echo "ERROR: Incorrect number of arguments, received $#, but 2 are required"
   echo "Usage:"
   echo "$0 ACTION CLUSTER_NAME"
   for param in "$@"
