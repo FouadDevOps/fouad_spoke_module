@@ -139,7 +139,7 @@ VNET_NAME=$5
 SUBNET_NAME=$6
 SERVICE_MESH=$7
 
-if [ -z "$LOAD_BALANCER_IP" ]; then
+if [ -z $LOAD_BALANCER_IP = true ]; then
   echo "Get an IP from the subnet"
   LOAD_BALANCER_IP=$(az network vnet subnet list-available-ips --resource-group "$RESOURCE_GROUP" --vnet-name "$VNET_NAME" --name "$SUBNET_NAME" --query [0])
   echo "Assigned IP: $LOAD_BALANCER_IP"
