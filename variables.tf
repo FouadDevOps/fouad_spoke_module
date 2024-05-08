@@ -3,7 +3,7 @@ variable "aks_cluster" {
     name                = string
     loadBalancerIp      = optional(string, null)
     service_mesh        = optional(string, null)
-    auto_loadBalancerIp = optional(bool, false)
+    auto_loadBalancerIp = optional(string, "")
     kubernetes_version  = optional(string)
   })
   description = "Properties of the AKS cluster"
