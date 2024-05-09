@@ -32,7 +32,7 @@ resource "null_resource" "loadBalancerIp" {
     subnet_name         = "aks-subnet"
     loadBalancerIp      = var.aks_cluster.loadBalancerIp
     service_mesh        = var.aks_cluster.service_mesh
-    auto_loadBalancerIp = tostring(var.aks_cluster.auto_loadBalancerIp)
+    auto_loadBalancerIp = var.aks_cluster.auto_loadBalancerIp
 
   }
 
