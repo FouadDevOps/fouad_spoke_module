@@ -107,29 +107,6 @@
 # fi
 # fi
 
-#!/bin/bash
-set -e
-
-######### Expected Inputs ############
-
-### $1 = Action. Either "add" or "rm"
-### $2 = Cluster Name
-### $3 = Load Balancer IP
-### $4 = Resource Group
-### $5 = VNET Name
-### $6 = Subnet Name
-### $7 = Service Mesh
-
-######################################
-
-if [ "$#" -ne 7 ]; then
-  echo "ERROR: Incorrect number of arguments, received $#, but 7 are required."
-  echo "Usage: $0 ACTION CLUSTER_NAME AUTO_LOAD_BALANCER_IP RESOURCE_GROUP VNET_NAME SUBNET_NAME SERVICE_MESH"
-  for param in "$@"; do
-    echo "Received: $param"
-  done
-  exit 1
-fi
 
 #!/bin/bash
 set -e
