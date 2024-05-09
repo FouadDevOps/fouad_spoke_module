@@ -32,7 +32,7 @@ resource "null_resource" "loadBalancerIp" {
     subnet_name         = "aks-subnet"
     loadBalancerIp      = var.aks_cluster.loadBalancerIp
     service_mesh        = var.aks_cluster.service_mesh
-    auto_loadBalancerIp = var.aks_cluster.auto_loadBalancerIp
+    auto_loadBalancerIp = tostring(var.aks_cluster.auto_loadBalancerIp)
 
   }
 
@@ -42,7 +42,7 @@ resource "null_resource" "loadBalancerIp" {
     command = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME \"$AUTO_LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\""
     environment = {
       CLUSTER_NAME                      = self.triggers.cluster_name
-      AUTO_LOAD_BALANCER_IP             = self.triggers.auto_loadBalancerIp
+      AUTO_LOAD_BALANCER_IP             = tostring(self.triggers.auto_loadBalancerIp)
       RESOURCE_GROUP                    = self.triggers.resource_group_name
       VNET_NAME                         = self.triggers.vnet_name
       SUBNET_NAME                       = self.triggers.subnet_name
@@ -56,7 +56,7 @@ resource "null_resource" "loadBalancerIp" {
     command = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME \"$AUTO_LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\""
     environment = {
       CLUSTER_NAME                    = self.triggers.cluster_name
-      AUTO_LOAD_BALANCER_IP           = self.triggers.auto_loadBalancerIp
+      AUTO_LOAD_BALANCER_IP           = tostring(self.triggers.auto_loadBalancerIp)
       RESOURCE_GROUP                  = self.triggers.resource_group_name
       VNET_NAME                       = self.triggers.vnet_name
       SUBNET_NAME                     = self.triggers.subnet_name
