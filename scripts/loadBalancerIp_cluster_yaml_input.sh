@@ -31,14 +31,14 @@ VNET_NAME=$6
 SUBNET_NAME=$7
 SERVICE_MESH=$8
 
-if [ $AUTO_LOAD_BALANCER_IP = "true" ]; then
+if [ -n "$LOAD_BALANCER_IP" ]; then
+  USE_LOAD_BALANCER_IP=$LOAD_BALANCER_IP
+
+elif [ $AUTO_LOAD_BALANCER_IP = "true" ]; then
   echo "Get an IP from the subnet"
   USE_LOAD_BALANCER_IP=$(az network vnet subnet list-available-ips --resource-group "$RESOURCE_GROUP" --vnet-name "$VNET_NAME" --name "$SUBNET_NAME" --query [0])
   echo "Assigned IP: $AUTO_LOAD_BALANCER_IP"
 
-
-elif [ -n "$LOAD_BALANCER_IP" ]; then
-  USE_LOAD_BALANCER_IP=$LOAD_BALANCER_IP
 else
   USE_LOAD_BALANCER_IP=$AUTO_LOAD_BALANCER_IP
 fi
