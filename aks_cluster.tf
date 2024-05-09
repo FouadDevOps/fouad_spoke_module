@@ -23,7 +23,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
 
 # Null Resource for Load Balancer IP Configuration
 resource "null_resource" "loadBalancerIp" {
-  count = var.aks_cluster.loadBalancerIp != null || var.aks_cluster.auto_loadBalancerIp == "true" || var.aks_cluster.service_mesh == "istio" ? 1 : 0
+  count = var.aks_cluster.loadBalancerIp != null || var.aks_cluster.auto_loadBalancerIp == true || var.aks_cluster.service_mesh == "istio" ? 1 : 0
 
   triggers = {
     cluster_name        = azurerm_kubernetes_cluster.aks_cluster.name
@@ -42,7 +42,7 @@ resource "null_resource" "loadBalancerIp" {
     command = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh add $CLUSTER_NAME \"$AUTO_LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\""
     environment = {
       CLUSTER_NAME                      = self.triggers.cluster_name
-      AUTO_LOAD_BALANCER_IP             = self.triggers.loadBalancerIp
+      AUTO_LOAD_BALANCER_IP             = self.triggers.auto_loadBalancerIp
       RESOURCE_GROUP                    = self.triggers.resource_group_name
       VNET_NAME                         = self.triggers.vnet_name
       SUBNET_NAME                       = self.triggers.subnet_name
@@ -56,7 +56,7 @@ resource "null_resource" "loadBalancerIp" {
     command = "chmod +x loadBalancerIp_cluster_yaml_input.sh; ./loadBalancerIp_cluster_yaml_input.sh rm $CLUSTER_NAME \"$AUTO_LOAD_BALANCER_IP\" \"$RESOURCE_GROUP\" \"$VNET_NAME\" \"$SUBNET_NAME\" \"$SERVICE_MESH\""
     environment = {
       CLUSTER_NAME                    = self.triggers.cluster_name
-      AUTO_LOAD_BALANCER_IP           = self.triggers.loadBalancerIp
+      AUTO_LOAD_BALANCER_IP           = self.triggers.auto_loadBalancerIp
       RESOURCE_GROUP                  = self.triggers.resource_group_name
       VNET_NAME                       = self.triggers.vnet_name
       SUBNET_NAME                     = self.triggers.subnet_name
