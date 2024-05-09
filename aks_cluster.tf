@@ -76,7 +76,6 @@ resource "null_resource" "service_mesh" {
   triggers = {
     cluster_name   = azurerm_kubernetes_cluster.aks_cluster.name
     service_mesh   = var.aks_cluster.service_mesh
-    # loadBalancerIp = var.aks_cluster.loadBalancerIp
   }
 
   provisioner "local-exec" {
