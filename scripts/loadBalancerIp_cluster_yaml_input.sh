@@ -131,21 +131,52 @@ if [ "$#" -ne 7 ]; then
   exit 1
 fi
 
+#!/bin/bash
+set -e
+
+######### Expected Inputs ############
+
+### $1 = Action. Either "add" or "rm"
+### $2 = Cluster Name
+### $3 = Load Balancer IP
+### $4 = Resource Group
+### $5 = VNET Name
+### $6 = Subnet Name
+### $7 = Service Mesh
+
+######################################
+
+if [ "$#" -ne 8 ]; then
+  echo "ERROR: Incorrect number of arguments, received $#, but 8 are required."
+  echo "Usage: $0 ACTION CLUSTER_NAME AUTO_LOAD_BALANCER_IP RESOURCE_GROUP VNET_NAME SUBNET_NAME SERVICE_MESH"
+  for param in "$@"; do
+    echo "Received: $param"
+  done
+  exit 1
+fi
+
 ACTION=$1
 CLUSTER_NAME=$2
 AUTO_LOAD_BALANCER_IP=$3
-RESOURCE_GROUP=$4
-VNET_NAME=$5
-SUBNET_NAME=$6
-SERVICE_MESH=$7
+LOAD_BALANCER_IP=$4
+RESOURCE_GROUP=$5
+VNET_NAME=$6
+SUBNET_NAME=$7
+SERVICE_MESH=$8
 
 if [ $AUTO_LOAD_BALANCER_IP = "true" ]; then
   echo "Get an IP from the subnet"
-  AUTO_LOAD_BALANCER_IP=$(az network vnet subnet list-available-ips --resource-group "$RESOURCE_GROUP" --vnet-name "$VNET_NAME" --name "$SUBNET_NAME" --query [0])
+  USE_LOAD_BALANCER_IP=$(az network vnet subnet list-available-ips --resource-group "$RESOURCE_GROUP" --vnet-name "$VNET_NAME" --name "$SUBNET_NAME" --query [0])
   echo "Assigned IP: $AUTO_LOAD_BALANCER_IP"
+
+
+elif [ -n "$LOAD_BALANCER_IP" ]; then
+  USE_LOAD_BALANCER_IP=$LOAD_BALANCER_IP
+else
+  USE_LOAD_BALANCER_IP=$AUTO_LOAD_BALANCER_IP
 fi
 
-export AUTO_LOAD_BALANCER_IP
+export USE_LOAD_BALANCER_IP
 
 echo "Parameters in use:"
 echo "ACTION: $ACTION"
@@ -179,14 +210,14 @@ if pwd | grep -q managed-environment; then
         cat "$CLUSTER_NAME.yaml" | yq '.values' | sed 's/^/  /' > values_part.yaml
         awk '/values: \|/{print $0; exit} {print}' "$CLUSTER_NAME.yaml" values_part.yaml > header_part.yaml
         cp header_part.yaml updated.yaml
-        cat "$CLUSTER_NAME.yaml" | yq '.values' | yq 'del(.loadBalancerIp)' | yq ".gateway.service.loadBalancerIp = env(AUTO_LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
+        cat "$CLUSTER_NAME.yaml" | yq '.values' | yq 'del(.loadBalancerIp)' | yq ".gateway.service.loadBalancerIp = env(USE_LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
         cat updated.yaml > "$CLUSTER_NAME.yaml"
       else
         echo "Add loadBalancerIp only flag:"
         cat "$CLUSTER_NAME.yaml" | yq '.values' | sed 's/^/  /' > values_part.yaml
         awk '/values: \|/{print $0; exit} {print}' "$CLUSTER_NAME.yaml" values_part.yaml > header_part.yaml
         cp header_part.yaml updated.yaml
-        cat "$CLUSTER_NAME.yaml" | yq '.values' | yq 'del(.gateway)' | yq ".loadBalancerIp = env(AUTO_LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
+        cat "$CLUSTER_NAME.yaml" | yq '.values' | yq 'del(.gateway)' | yq ".loadBalancerIp = env(USE_LOAD_BALANCER_IP)" | sed 's/^/  /' >> updated.yaml
         cat updated.yaml > "$CLUSTER_NAME.yaml"
       fi
 
