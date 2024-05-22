@@ -1,9 +1,9 @@
 variable "aks_cluster" {
   type = object({
     name                = string
-    loadBalancerIp      = optional(string, null)
-    service_mesh        = optional(string, null)
-    auto_loadBalancerIp = optional(bool, false) 
+    # loadBalancerIp      = optional(string, null)
+    # service_mesh        = optional(string, null)
+    # auto_loadBalancerIp = optional(bool, false) 
     kubernetes_version  = optional(string)
   })
   description = "Properties of the AKS cluster"
