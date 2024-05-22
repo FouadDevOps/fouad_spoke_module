@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   default_node_pool {
     name       = var.node_pool_name
     node_count = var.node_count
-    vm_size    = "standard_b2pls_v2"
+    vm_size    = "Standard_B1s"
   }
 
   identity {
