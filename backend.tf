@@ -19,11 +19,11 @@ resource "azurerm_storage_container" "sc" {
 }
 
 
-# terraform {
-#   backend "azurerm" {
-#     resource_group_name = "aks_resource_group"
-#     storage_account_name = "fouadazurestorage"
-#     container_name = "tfstate-container"
-#     key = "terraform.tfstate"
-#   }
-# }
+terraform {
+  backend "azurerm" {
+    resource_group_name = "aks_resource_group"
+    storage_account_name = "fouadazurestorage"
+    container_name = "tfstate-container"
+    key = "terraform.tfstate"
+  }
+}
